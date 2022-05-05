@@ -1,0 +1,11 @@
+/* 
+  Localizable.strings
+  hello-world
+
+  Created by Yaser El Dabete Arribas on 5/5/22.
+  
+*/
+
+"splash_title_label" = "Hello World";
+"splash_subtitle_label" = "API";
+"users_list_title" = "Listado de usuarios";
