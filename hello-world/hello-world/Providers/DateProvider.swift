@@ -12,7 +12,7 @@ class DateProvider {
         Converts a date to the format indicated by parameter.
         - Parameter from: Initial date format.
         - Parameter to: Format to convert to
-        - Parameter dateToConvert: Date to convert :).
+        - Parameter dateToConvert: Date to convert.
      */
     func transformDate(from: String, to: String, dateToConvert: String) -> String? {
         let dateFormatter = DateFormatter()
@@ -22,6 +22,21 @@ class DateProvider {
             dateFormatter.dateFormat = to
             let stringDate = dateFormatter.string(from: date)
             return stringDate
+        }
+        return nil
+    }
+    
+    /**
+        Converts a date string to date
+        - Parameter format: Format to convert to
+        - Parameter dateToConvert: Date to convert.
+     */
+    func stringToDate(format: String, dateToConvert: String) -> Date? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale.current
+        dateFormatter.dateFormat = format
+        if let date = dateFormatter.date(from: dateToConvert) {
+            return date
         }
         return nil
     }

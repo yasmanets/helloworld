@@ -28,6 +28,11 @@ class UsersViewController: UIViewController {
         self.setupUsersTableView()
         self.getUsers()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.getUsers()
+    }
 
     private func setupNavigationTitle() {
         self.title = R.string.localizable.users_list_title()
@@ -37,7 +42,7 @@ class UsersViewController: UIViewController {
     
     private func setupSnackBars() {
         self.serverErrorSnackBar = CustomSnackBar.createSnackbar(message: R.string.localizable.server_error_message(), type: .text, duration: .middle)
-        self.successSnackBar = CustomSnackBar.createSnackbar(message: R.string.localizable.success_deletion_message(), type: .text, duration: .middle)
+        self.successSnackBar = CustomSnackBar.createSnackbar(message: R.string.localizable.successful_deletion_message(), type: .text, duration: .middle)
     }
     
     private func setupUsersTableView() {
@@ -49,10 +54,11 @@ class UsersViewController: UIViewController {
     
     private func getUsers() {
         let url = Constants.API_BASE_URL + Constants.USER_ENDPOINT
-        ApiProvider().commonRequest(entity: [Users].self, url: url, method: .GET) { (data, error) in
+        ApiProvider().commonRequest(entity: [Users].self, url: url, method: .GET, body: nil) { (data, error) in
             if let users = data {
                 DispatchQueue.main.async {
                     self.users = users
+                    self.users = users.sorted(by: { $0.birthdate!.compare($1.birthdate!) == .orderedDescending })
                     self.usersTableView.reloadData()
                 }
             }
@@ -64,7 +70,7 @@ class UsersViewController: UIViewController {
     
     private func deleteUser(user: Users, indexPath: IndexPath) {
         let url = Constants.API_BASE_URL + Constants.USER_ENDPOINT + "/\(user.id!)"
-        ApiProvider().commonRequest(entity: Users.self, url: url, method: .DELETE) { (data, error) in
+        ApiProvider().commonRequest(entity: Users.self, url: url, method: .DELETE, body: nil) { (data, error) in
             if data == nil && error == false {
                 DispatchQueue.main.async {
                     self.users.remove(at: indexPath.row)
@@ -79,12 +85,13 @@ class UsersViewController: UIViewController {
     }
 
     @objc func didTapAddUser() {
-        self.navigateToManageUser(user: nil)
+        self.navigateToManageUser(user: nil, type: "new")
     }
     
-    private func navigateToManageUser(user: Users?) {
+    private func navigateToManageUser(user: Users?, type: String) {
         let viewController = UIStoryboard.init(name: "Manage", bundle: Bundle.main).instantiateViewController(withIdentifier: "ManageViewController") as! ManageViewController
         viewController.user = user
+        viewController.type = type
         self.show(viewController, sender: self)
     }
 }
@@ -122,7 +129,7 @@ extension UsersViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.navigateToManageUser(user: self.users[indexPath.row])
+        self.navigateToManageUser(user: self.users[indexPath.row], type: "view")
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
