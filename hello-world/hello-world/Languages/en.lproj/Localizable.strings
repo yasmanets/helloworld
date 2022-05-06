@@ -9,3 +9,9 @@
 "splash_title_label" = "Hello World";
 "splash_subtitle_label" = "API";
 "users_list_title" = "Users list";
+"users_list_name" = "Name: %@";
+"users_list_no_name" = "Unknown name";
+"users_list_birthdate" = "Birthdate: %@";
+"users_list_no_birthdate" = "Unknown birthdate";
+"success_deletion_message" = "The user has been successfully deleted";
+"server_error_message" = "An error occurred while processing the request";
