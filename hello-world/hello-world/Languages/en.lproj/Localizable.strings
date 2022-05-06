@@ -13,5 +13,10 @@
 "users_list_no_name" = "Unknown name";
 "users_list_birthdate" = "Birthdate: %@";
 "users_list_no_birthdate" = "Unknown birthdate";
-"success_deletion_message" = "The user has been successfully deleted";
+"manage_user_title_view" = "User details";
+"manage_user_title_new" = "New user";
+"manage_user_name" = "Name";
+"manage_user_birthdate" = "Birthdate";
+"successful_deletion_message" = "The user has been successfully deleted";
 "server_error_message" = "An error occurred while processing the request";
+"successful_creation_message" = "The user has been successfully created";

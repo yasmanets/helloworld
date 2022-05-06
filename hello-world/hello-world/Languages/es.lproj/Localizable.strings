@@ -13,5 +13,10 @@
 "users_list_no_name" = "Nombre no conocido";
 "users_list_birthdate" = "Cumpleaños: %@";
 "users_list_no_birthdate" = "Cumpleaños no conocido";
-"success_deletion_message" = "El usuario ha sido eliminado con éxito";
+"manage_user_title_view" = "Detalles del usuario";
+"manage_user_title_new" = "Nuevo usuario";
+"manage_user_name" = "Nombre";
+"manage_user_birthdate" = "Fecha de cumpleaños";
+"successful_deletion_message" = "El usuario ha sido eliminado con éxito";
 "server_error_message" = "Se ha producido un error al procesar la petición";
+"successful_creation_message" = "El usuario ha sido creado con éxito";
