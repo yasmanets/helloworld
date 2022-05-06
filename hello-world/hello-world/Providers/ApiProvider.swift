@@ -19,10 +19,14 @@ class ApiProvider {
     }
     
     
-    func commonRequest<T:Codable>(entity: T.Type, url: String, method: Constants.HttpMethods, completion: @escaping (_ data: T?, _ error: Bool?) -> Void) {
+    func commonRequest<T:Codable>(entity: T.Type, url: String, method: Constants.HttpMethods, body: [String: Any]?, completion: @escaping (_ data: T?, _ error: Bool?) -> Void) {
         var request = URLRequest(url: URL(string: url)!)
         request.httpMethod = method.rawValue
         request = ApiProvider.setCommonHeaders(&request)
+        
+        if let body = body {
+            request = ApiProvider.setBody(&request, body: body)
+        }
         
         let task = URLSession.shared.dataTask(with: request, completionHandler: {data, response, error -> Void in
             do {
@@ -31,18 +35,26 @@ class ApiProvider {
                         completion(nil, true)
                     }
                 }
-                if data != nil {
-                    let responseModel = self.genericDecoder(entity.self, from: data!)
+                if let data = data {
+                    if data.count == 0 {
+                        return completion(nil, false)
+                    }
+                    let responseModel = self.genericDecoder(entity.self, from: data)
                     if responseModel != nil {
-                        completion(responseModel, false)
+                        return completion(responseModel, false)
                     }
                     else {
-                        completion(nil, true)
+                        return completion(nil, true)
                     }
                 }
             }
         })
         task.resume()
+    }
+    
+    static func setBody(_ request: inout URLRequest, body: [String: Any]) -> URLRequest {
+        request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: [])
+        return request
     }
     
     static func setCommonHeaders(_ request: inout URLRequest) -> URLRequest {
