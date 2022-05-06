@@ -12,3 +12,9 @@ struct Users: Codable {
     let name: String?
     let birthdate: String?
 }
+
+extension Users {
+    func toDictionary() -> [String: Any] {
+        return ["id": self.id as Any, "name": self.name as Any, "birthdate": self.birthdate as Any]
+    }
+}
