@@ -9,9 +9,11 @@ import UIKit
 
 class UsersViewController: UIViewController {
 
-    @IBOutlet weak var usersTableView: UITableView!
+    @IBOutlet weak var usersTableView:  UITableView!
+    @IBOutlet weak var searchBar:       UISearchBar!
     
     private var users: [Users] = []
+    private var filteredUsers: [Users] = []
     
     private let userCellIdentifier    = "userCell"
     private let userTableViewCell     = "UsersTableViewCell"
@@ -19,7 +21,7 @@ class UsersViewController: UIViewController {
     
     private var serverErrorSnackBar:    CustomSnackBar!
     private var successSnackBar:        CustomSnackBar!
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -27,6 +29,7 @@ class UsersViewController: UIViewController {
         self.setupSnackBars()
         self.setupUsersTableView()
         self.getUsers()
+        self.searchBar.delegate = self
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -59,6 +62,7 @@ class UsersViewController: UIViewController {
                 DispatchQueue.main.async {
                     self.users = users
                     self.users = users.sorted(by: { $0.birthdate!.compare($1.birthdate!) == .orderedDescending })
+                    self.filteredUsers = self.users
                     self.usersTableView.reloadData()
                 }
             }
@@ -74,6 +78,7 @@ class UsersViewController: UIViewController {
             if data == nil && error == false {
                 DispatchQueue.main.async {
                     self.users.remove(at: indexPath.row)
+                    self.filteredUsers.remove(at: indexPath.row)
                     self.usersTableView.deleteRows(at: [indexPath], with: .fade)
                     self.successSnackBar.showUp()
                 }
@@ -103,13 +108,13 @@ extension UsersViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.users.count
+        return self.filteredUsers.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = self.usersTableView.dequeueReusableCell(withIdentifier: self.userCellIdentifier, for: indexPath) as! UsersTableViewCell
         
-        if let name = self.users[indexPath.row].name {
+        if let name = self.filteredUsers[indexPath.row].name {
             cell.nameLabel.text = R.string.localizable.users_list_name(name)
         }
         else {
@@ -117,7 +122,7 @@ extension UsersViewController: UITableViewDelegate, UITableViewDataSource {
         }
         
         
-        let date = DateProvider().transformDate(from: Constants.FULLDATE, to: Constants.DATE, dateToConvert: self.users[indexPath.row].birthdate!)
+        let date = DateProvider().transformDate(from: Constants.FULLDATE, to: Constants.DATE, dateToConvert: self.filteredUsers[indexPath.row].birthdate!)
         if let date = date {
             cell.birthdateLabel.text = R.string.localizable.users_list_birthdate(date)
         }
@@ -129,12 +134,32 @@ extension UsersViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.navigateToManageUser(user: self.users[indexPath.row], type: "view")
+        self.navigateToManageUser(user: self.filteredUsers[indexPath.row], type: "view")
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            self.deleteUser(user: self.users[indexPath.row], indexPath: indexPath)
+            self.deleteUser(user: self.filteredUsers[indexPath.row], indexPath: indexPath)
         }
+    }
+}
+
+extension UsersViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        self.filteredUsers = []
+        for user in self.users {
+            if let name = user.name, name.contains(searchText) {
+                self.filteredUsers.append(user)
+            }
+        }
+        if self.filteredUsers.count == 0 {
+            self.filteredUsers = self.users
+        }
+        self.usersTableView.reloadData()
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        self.filteredUsers = self.users
+        self.usersTableView.reloadData()
     }
 }

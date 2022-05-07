@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="KOd-T1-AyC">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -16,8 +17,13 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <searchBar contentMode="redraw" id="LzZ-yz-VDw">
+                                <rect key="frame" x="0.0" y="90" width="413" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </searchBar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="5ds-3Z-UhW">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                <rect key="frame" x="0.0" y="134" width="414" height="762"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <connections>
@@ -32,11 +38,12 @@
                             <constraint firstAttribute="bottom" secondItem="5ds-3Z-UhW" secondAttribute="bottom" id="Baz-0g-Npa"/>
                             <constraint firstItem="5ds-3Z-UhW" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="Ji2-3J-JaF"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="5ds-3Z-UhW" secondAttribute="trailing" id="NXD-SJ-QPp"/>
-                            <constraint firstItem="5ds-3Z-UhW" firstAttribute="top" secondItem="5EZ-qb-Rvc" secondAttribute="top" id="Rp3-Fk-K8N"/>
+                            <constraint firstItem="5ds-3Z-UhW" firstAttribute="top" secondItem="LzZ-yz-VDw" secondAttribute="bottom" id="Rp3-Fk-K8N"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="bho-ie-4Js"/>
                     <connections>
+                        <outlet property="searchBar" destination="LzZ-yz-VDw" id="fUI-I1-LtW"/>
                         <outlet property="usersTableView" destination="5ds-3Z-UhW" id="gR0-jf-cgi"/>
                     </connections>
                 </viewController>
